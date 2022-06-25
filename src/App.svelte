@@ -1,5 +1,6 @@
 <script>
 	import logo from "./assets/svelte.png";
+	import AddPersonForm from "./AddPersonForm.svelte";
 	//import Counter from "./lib/Counter.svelte";
 
 	let nombre = "Said";
@@ -31,6 +32,13 @@
 	}
 
 	let hello = true;
+
+	const addPerson = (e) => {
+		//console.log(e.detail);
+		const person = e.detail;
+		people = [person, ...people];
+	}
+
 </script>
 
 <main >
@@ -46,23 +54,32 @@
 	<input type="text" placeholder="Enter last name" bind:value={lastName}>
 	<input type="text" placeholder="Enter a color" bind:value={colorText}>
 
-	{#each people as person (person.id)}
-		<div class:hello={hello}>
-			<h4>{person.name}</h4>
-			<p>{person.age} years old, {person.color} is prefered color</p>
-			<button on:click={ () => handleClickDelete(person.id) }>delete</button>
-		</div>
-	{:else}
-		<h1>There are no people to show ...</h1>
-	{/each}
+	<div class="grid">
+		{#each people as person (person.id)}
+			<div class:hello={hello}>
+				<h4>{person.name}</h4>
+				<p>{person.age} years old, <span style="color: {person.color}">{person.color}</span> is prefered color</p>
+				<button on:click={ () => handleClickDelete(person.id) }>delete</button>
+			</div>
+		{:else}
+			<h1>There are no people to show ...</h1>
+		{/each}
+	</div>
 
 	<!-- <Counter /> -->
 
 	<h4 class="red">Red</h4>
 
+	<AddPersonForm on:addPerson={addPerson}/>
+
 </main>
 
 <style>
+	:global(body){
+		margin: 0;
+		padding: 0;
+	}
+
 	:root {
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
 			Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -116,5 +133,14 @@
 
 	.hello {
 		background-color: lightsalmon;
+		padding: 10px;
+		border-radius: 20px;
+	}
+
+	.grid {
+		display: flex;
+		justify-content: center;
+		gap: 10px; 
+		margin: 20px 0px;
 	}
 </style>
